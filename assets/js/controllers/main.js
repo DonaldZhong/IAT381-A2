@@ -1,5 +1,3 @@
-   // create the controller and inject Angular's $scope
-    clockApp.controller('mainController', function($scope) {
-        // create a message to display in our view
+	clockApp.controller('mainController', function($scope) {
         $scope.message = 'testing the mainController';
     });

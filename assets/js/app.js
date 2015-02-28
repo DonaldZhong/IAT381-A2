@@ -22,8 +22,8 @@ var clockApp = angular.module('clockApp', ['ngRoute']);
             .when('/timer', {
                 templateUrl : 'views/timer.html',
                 controller  : 'timerController'
-            });
-	  //       .otherwise({
-		 //      	redirectTo: '/'
-			// });    
+            })
+	        .otherwise({
+		      	redirectTo: '/'
+			});    
     });

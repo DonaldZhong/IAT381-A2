@@ -1,3 +1,31 @@
+#jsalarmclock{
+font-family: Tahoma;
+font-weight: bold;
+font-size: 12px;
+}
+
+#jsalarmclock div{
+margin-bottom: 0.8em;
+}
+
+#jsalarmclock div.leftcolumn{
+float: left;
+width: 150px;
+font-size: 13px;
+clear: left;
+}
+
+#jsalarmclock span{
+margin-right: 5px;
+}
+
+
+
+
+
+
+
+
 /*-------------------------
 	Simple reset
 --------------------------*/
