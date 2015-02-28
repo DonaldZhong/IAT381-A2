@@ -14,7 +14,6 @@ var jsalarm={
 		this.ctref.setAttribute("title", ct)
 		if (typeof this.hourwake!="undefined"){ //if alarm is set
 			if (this.ctref.title==(this.hourwake+":"+this.minutewake+":"+this.secondwake)){
-				clearInterval(jsalarm.timer)
 				sound.play();
 			}
 		}
