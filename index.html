@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html ng-app="clockApp">
+
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport" content="user-scalable=yes" maximum-scale="1">
+<title>Digital Clock App</title>
+
+<!-- The main CSS file -->
+<link href="assets/css/style.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+<div class="container">
+	<div class="tabs-x tabs-left tab-bordered" role="tablist">
+		<div class="nav nav-tabs"> 
+		<div><a href="#" ><img src="assets/img/clock.png" class="img-responsive" alt="Main"></a></div>    
+		<div><a href="#/alarm" ><img src="assets/img/alarm.png" class="img-responsive" alt="Alarm"></a></div>        
+		<div><a href="#/timer"><img src="assets/img/timer.png" class="img-responsive" alt="Timer"></a></div> 
+		<div><a href="#/stopWatch" ><img src="assets/img/stopWatch.png" class="img-responsive" alt="stopWatch"></a></div>  
+		</div> 
+	</div>
+</div>
+
+
+<div id="clock" class="light">
+	<div class="display">
+		<div class="weekdays"></div>
+		<div class="ampm"></div>
+		<div class="alarm"></div>
+		<div class="digits"></div>
+	</div>
+</div>
+
+
+<div ng-view></div>
+
+
+<!-- 		<div class="button-holder">
+	<a class="button">Switch Theme</a>
+</div> -->
+
+		<!-- <button>Start</button>
+<h1></h1>
+
+<span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span> -->
+
+
+	<!-- <h3>
+    	<timer interval="1000">{{hours}} hour{{hoursS}}, {{minutes}} minute{{minutesS}}, {{seconds}} second{{secondsS}}.</timer>
+	</h3>
+		<button class="btn" onclick="stopResumeTimer('clock-timer', this)" type="button">Stop</button> -->
+<!--     		</div>
+-->    
+
+<!-- JavaScript Includes -->
+<script src="bower_components/jquery/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/bootstrap/docs/assets/js/bootstrap.min.js"></script>
+<script src="assets/js/moment.min.js"></script>
+<script src="assets/js/script.js"></script>
+<script src="assets/js/timer.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/controllers/main.js"></script>
+<script src="assets/js/controllers/alarm.js"></script>
+<script src="assets/js/controllers/timer.js"></script>
+<script src="assets/js/controllers/stopWatch.js"></script>
+
+</body>
+</html>
