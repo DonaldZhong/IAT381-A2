@@ -1,253 +1,265 @@
-$(function(){
-
-	// Cache some selectors
-
-	var clock = $('#clock'),
-		alarm = clock.find('.alarm'),
-		ampm = clock.find('.ampm'),
-		dialog = $('#alarm-dialog').parent(),
-		alarm_set = $('#alarm-set'),
-		alarm_clear = $('#alarm-clear'),
-		time_is_up = $('#time-is-up').parent();
-
-	// This will hold the number of seconds left
-	// until the alarm should go off
-	var alarm_counter = -1;
-
-	// Map digits to their names (this will be an array)
-	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
-
-	// This object will hold the digit elements
-	var digits = {};
-
-	// Positions for the hours, minutes, and seconds
-	var positions = [
-		'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
-	];
-
-	// Generate the digits with the needed markup,
-	// and add them to the clock
-
-	var digit_holder = clock.find('.digits');
-
-	$.each(positions, function(){
-
-		if(this == ':'){
-			digit_holder.append('<div class="dots">');
-		}
-		else{
-
-			var pos = $('<div>');
-
-			for(var i=1; i<8; i++){
-				pos.append('<span class="d' + i + '">');
-			}
-
-			// Set the digits as key:value pairs in the digits object
-			digits[this] = pos;
-
-			// Add the digit elements to the page
-			digit_holder.append(pos);
-		}
-
-	});
-
-	// Add the weekday names
-
-	var weekday_names = 'MON TUE WED THU FRI SAT SUN'.split(' '),
-		weekday_holder = clock.find('.weekdays');
-
-	$.each(weekday_names, function(){
-		weekday_holder.append('<span>' + this + '</span>');
-	});
-
-	var weekdays = clock.find('.weekdays span');
-
-
-	// Run a timer every second and update the clock
-
-	(function update_time(){
-
-		// Use moment.js to output the current time as a string
-		// hh is for the hours in 12-hour format,
-		// mm - minutes, ss-seconds (all with leading zeroes),
-		// d is for day of week and A is for AM/PM
-
-		var now = moment().format("hhmmssdA");
-
-		digits.h1.attr('class', digit_to_name[now[0]]);
-		digits.h2.attr('class', digit_to_name[now[1]]);
-		digits.m1.attr('class', digit_to_name[now[2]]);
-		digits.m2.attr('class', digit_to_name[now[3]]);
-		digits.s1.attr('class', digit_to_name[now[4]]);
-		digits.s2.attr('class', digit_to_name[now[5]]);
-
-		// The library returns Sunday as the first day of the week.
-		// Stupid, I know. Lets shift all the days one position down, 
-		// and make Sunday last
-
-		var dow = now[6];
-		dow--;
-		
-		// Sunday!
-		if(dow < 0){
-			// Make it last
-			dow = 6;
-		}
-
-		// Mark the active day of the week
-		weekdays.removeClass('active').eq(dow).addClass('active');
-
-		// Set the am/pm text:
-		ampm.text(now[7]+now[8]);
-
-
-		// Is there an alarm set?
-
-		if(alarm_counter > 0){
-			
-			// Decrement the counter with one second
-			alarm_counter--;
-
-			// Activate the alarm icon
-			alarm.addClass('active');
-		}
-		else if(alarm_counter == 0){
-
-			time_is_up.fadeIn();
-
-			// Play the alarm sound. This will fail
-			// in browsers which don't support HTML5 audio
-
-			try{
-				$('#alarm-ring')[0].play();
-			}
-			catch(e){}
-			
-			alarm_counter--;
-			alarm.removeClass('active');
-		}
-		else{
-			// The alarm has been cleared
-			alarm.removeClass('active');
-		}
-
-		// Schedule this function to be run again in 1 sec
-		setTimeout(update_time, 1000);
-
-	})();
-
-	// Switch the theme
-
-	$('#switch-theme').click(function(){
-		clock.toggleClass('light dark');
-	});
-
-
-	// Handle setting and clearing alamrs
-
-	$('.alarm-button').click(function(){
-		
-		// Show the dialog
-		dialog.trigger('show');
-
-	});
-
-	dialog.find('.close').click(function(){
-		dialog.trigger('hide')
-	});
-
-	dialog.click(function(e){
-
-		// When the overlay is clicked, 
-		// hide the dialog.
-
-		if($(e.target).is('.overlay')){
-			// This check is need to prevent
-			// bubbled up events from hiding the dialog
-			dialog.trigger('hide');
-		}
-	});
-
-
-	alarm_set.click(function(){
-
-		var valid = true, after = 0,
-			to_seconds = [3600, 60, 1];
-
-		dialog.find('input').each(function(i){
-
-			// Using the validity property in HTML5-enabled browsers:
-
-			if(this.validity && !this.validity.valid){
-
-				// The input field contains something other than a digit,
-				// or a number less than the min value
-
-				valid = false;
-				this.focus();
-
-				return false;
-			}
-
-			after += to_seconds[i] * parseInt(parseInt(this.value));
-		});
-
-		if(!valid){
-			alert('Please enter a valid number!');
-			return;
-		}
-
-		if(after < 1){
-			alert('Please choose a time in the future!');
-			return;	
-		}
-
-		alarm_counter = after;
-		dialog.trigger('hide');
-	});
-
-	alarm_clear.click(function(){
-		alarm_counter = -1;
-
-		dialog.trigger('hide');
-	});
-
-	// Custom events to keep the code clean
-	dialog.on('hide',function(){
-
-		dialog.fadeOut();
-
-	}).on('show',function(){
-
-		// Calculate how much time is left for the alarm to go off.
-
-		var hours = 0, minutes = 0, seconds = 0, tmp = 0;
-
-		if(alarm_counter > 0){
-			
-			// There is an alarm set, calculate the remaining time
-
-			tmp = alarm_counter;
-
-			hours = Math.floor(tmp/3600);
-			tmp = tmp%3600;
-
-			minutes = Math.floor(tmp/60);
-			tmp = tmp%60;
-
-			seconds = tmp;
-		}
-
-		// Update the input fields
-		dialog.find('input').eq(0).val(hours).end().eq(1).val(minutes).end().eq(2).val(seconds);
-
-		dialog.fadeIn();
-
-	});
-
-	time_is_up.click(function(){
-		time_is_up.fadeOut();
-	});
-
-});
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+ 
+var FPS = 60;
+var _width = 400;
+var _height = 400;
+var particleNum = 5000;
+
+var CLOCK_VIEW = 0, TEXT_VIEW = 1;
+var nowDisp = CLOCK_VIEW;
+var particles = [];
+var ct = document.createElement('canvas');
+var ctx = ct.getContext('2d');
+ctx.fillStyle = '#fff';
+
+var canvas = document.getElementById("canvas");
+// var info = document.getElementById("info");
+
+ct.width  = canvas.width  = _width;
+ct.height = canvas.height = _height;
+canvas.onclick = mouseClick;
+
+var cc = canvas.getContext("2d");
+
+ /*var r = Math.floor(256*Math.random());
+ var g = Math.floor(256*Math.random());
+ var b = Math.floor(256*Math.random());*/
+
+cc.fillStyle = getRandomColor();
+
+
+cc.fillRect(0, 0, _width, _height);
+bit = cc.getImageData(0, 0, _width, _height);
+data = bit.data;
+cc.clearRect(0, 0, _width, _height);
+cc.fillStyle = getRandomColor();
+
+var updateState = false;
+var textData;
+var prev_time;
+var textWidth;
+var textHeight;
+var setX, setY;
+
+function setPixel(x, y){
+  var idx = ((x|0) + (y|0) * _width)*4;
+  data[idx+3] = 255;
+}
+function delPixel(x, y){
+  var idx = ((x|0) + (y|0) * _width)*4;
+  data[idx+3] = 0;
+}
+function faidout(){
+  for (var i = 3, l = data.length;i < l;i+=4){
+    var a = data[i];
+    if (a !== 0){
+      if (a < 36) {
+        data[i] = 0;
+      } else if (a < 66) {
+        data[i] *= 0.96;
+      } else {
+        data[i] *= 0.7;
+      }
+    }
+  }
+}
+
+var num = particleNum;
+while(num){
+  num--;
+  particles[num] = new particle();
+}
+var last = Date.now(), count = 0;
+setInterval(process, 1000/FPS);
+
+function process() {
+  var dispType = ['時計', '顔文字'];
+  ctx.clearRect(0, 0, _width, _height);
+  var time = timeDraw();
+  if (prev_time !== time){
+    updateState = true;
+  }
+  prev_time = time;
+  if(updateState){
+     
+  if (nowDisp === CLOCK_VIEW) {
+    // 時計
+      var textSize = 60;
+      var text = time;
+      textWidth = textSize*4.5;
+      textHeight = textSize;
+      setX = _width/2 - textSize*2.25;
+      setY = _height/2 - textSize/2;
+
+      ctx.font = textSize+"px sans-serif";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = '#fff';
+      ctx.fillText(text, setX, setY);
+    } else if(nowDisp === TEXT_VIEW) {
+    // テキスト
+      
+      textSize = 40;
+      var a = Math.floor(30*Math.random());
+      var score=["(^^)","∑(*ﾟｪﾟ*)","( ﾟ∀ﾟ)・;'.、","∑(ﾟ◇ﾟﾉ)ﾉ","(*ﾟДﾟ)","(*´∀｀*)","(｀ω´)","(｀・ω・´)","(*ﾉｪﾟ)b","(σﾟ∀ﾟ)σ","(ｏ'∀'人)",
+                      "(´；д；｀)","｡ﾟヽ(ﾟ｀Д´ﾟ)ﾉﾟ｡","・ﾟ・(*ﾉДﾉ)・ﾟ・","┐(´д｀)┌","(´・д・｀)","(´-д-)-3","((( ；ﾟДﾟ)))","( ﾟωﾟ；)",
+                      "((´∀｀*))","｡ﾟ(ﾟ＾∀＾ﾟ)ﾟ｡","(* 'ω')ﾉ","(*´ー｀)ﾉ","(´ω｀)ﾉｼ","o(^-^)o","(^_-)-☆","(*^-^*)","(-_-)","(ToT)","(・_・)","(>_<)","m(__)m"
+                      ];
+      //text = '(^^) lucky';
+      text=score[a];
+      textWidth = textSize * text.length;
+      textHeight = textSize;
+      setX = _width/2 - textSize * text.length/2 + 80;
+      setY = _height/2 - textSize/2;
+
+      ctx.font = textSize+"px sans-serif";
+      ctx.textBaseline = "top";
+      ctx.fillStyle = '#fff';
+      ctx.fillText(text, setX, setY);
+  }
+  updateState = false;
+  // パーティクルを配置する座標を取得する
+    textData = ctx.getImageData(setX, setY, textWidth, textHeight).data;
+  }
+  var m, _i = 0;
+  for (var x = 0; x < textWidth;x++) {
+    for(var y = 0; y < textHeight; y++) {
+      var idx  = (x+y*textWidth)*4;
+      if(textData[idx] > 100) {
+        _i++;
+        m = particles[_i];
+        // 現在の位置から目標までの値
+        var X = x + setX - m.px;
+        var Y = y + setY - m.py;
+        var T = Math.sqrt(X*X + Y*Y);
+        // 現在の位置から目標までの角度
+        var A = Math.atan2(Y, X);
+        var C = Math.cos(A);
+        var S = Math.sin(A);
+
+        // 移動幅
+        m.x = m.px + C*T*0.15;
+        m.y = m.py + S*T*0.15;
+        setPixel(m.x+Math.random()*3-1.5, m.y+Math.random()*3-1.5);
+        drawDotLine(m.x, m.y, m.px, m.py);
+        m.ran += 0.0007;
+        m.timeFlg = true;
+        //m.center = true;
+        m.px = m.x;
+        m.py = m.y;
+      }
+    }
+  }
+  // 余ったパーティクルをぐるぐるする
+  for(var i = _i+1, L = particles.length;i < L;i++) {
+    m = particles[i];
+    m.ran += 0.0007;
+
+    if(m.timeFlg) {
+      // 現在の位置から目標までの値
+      X = (_width/2 + Math.cos(m.ran*180/Math.PI) * m.range) - m.px;
+      Y = (_height/2 + Math.sin(m.ran*180/Math.PI) * m.range) - m.py;
+
+      T = Math.sqrt(X*X + Y*Y);
+      // 現在の位置から目標までの角度
+      A = Math.atan2(Y, X);
+      C = Math.cos(A);
+      S = Math.sin(A);
+
+      // 移動幅
+      m.x = m.px + C*T*0.15;
+      m.y = m.py + S*T*0.15;
+      if(m.x < 1 && m.y < 1) m.timeFlg = false;
+
+    } else {
+      // 次の配置位置
+      m.x = _width /2 + Math.cos(m.ran*180/Math.PI) * m.range;
+      m.y = _height/2 + Math.sin(m.ran*180/Math.PI) * m.range;
+    }
+
+    // パーティクルを配置
+    drawDotLine(m.x, m.y, m.px, m.py);
+  //setPixel(m.x, m.y);
+
+    m.px = m.x;
+    m.py = m.y;
+  }
+  cc.putImageData(bit, 0, 0);
+  faidout();
+  count++;
+  if (count === FPS){
+    var now = Date.now();
+    var _f = 1000 / ((now - last) / count);
+    count = 0;
+    // info.innerHTML = 'FPS '+_f.toFixed(2) +'<br>Display Type : ' + dispType[nowDisp];
+    last = Date.now();
+  }
+}
+
+// パーティクルの初期化
+function particle() {
+  var ran = Math.random()*360*180/Math.PI;
+  var range = _width/2.2 - Math.random()*16;
+
+  this.x = 0;
+  this.y = 0;
+  this.px = _width/2 + (Math.cos(ran) * range);
+  this.py = _height/2 + (Math.sin(ran) * range);
+  this.range = range;
+  this.ran = ran;
+}
+
+// 現在の時間を取得
+function timeDraw() {
+  var date = new Date();
+  var H = (date.getHours() > 9)? date.getHours() : '0'+date.getHours();
+  var M = (date.getMinutes() > 9)? date.getMinutes() : '0'+date.getMinutes();
+  var S = (date.getSeconds() > 9)? date.getSeconds() : '0'+date.getSeconds();
+  var timeTxt = H+':'+M+':'+S;
+
+  return timeTxt;
+}
+
+// マウスクリックイベント
+function mouseClick() {
+  if (nowDisp === CLOCK_VIEW){
+    nowDisp = TEXT_VIEW;
+  } else {
+    nowDisp = CLOCK_VIEW;
+  }
+  updateState = true;
+  return false;
+}
+
+// ドットで線を描く
+function drawDotLine(x, y, px, py) {
+  var _x = (x > px ? 1 : -1) * (x - px);
+  var _y = (y > py ? 1 : -1) * (y - py);
+  var sx = (x > px) ? -1 : 1;
+  var sy = (y > py) ? -1 : 1;
+  var r, i;
+  if (_x < 3 && _y < 3) return;
+  var l,s;
+  if(_x < _y){
+    l = _y;
+    s = _x;
+    r = s/l;
+    for (i = 0;i < l;i++){
+      setPixel(x + sx*i*r, y+sy*i);
+    }
+  } else {
+    l = _x;
+    s = _y;
+    r = s/l;
+    for (i = 0;i < l;i++){
+      setPixel(x + sx*i, y+sy*i*r);
+    }
+  }
+}
