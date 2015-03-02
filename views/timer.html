@@ -1,0 +1,20 @@
+<div>
+    <h1>Countdown</h1>
+    <span id="cd_h">00</span>:
+    <span id="cd_m">00</span>:
+    <span id="cd_s">00</span>:
+    <span id="cd_ms">00</span>
+    <br/>
+    <br/>
+    <input type="button" value="Start" id="cd_start" onclick="$.APP.startTimer('cd')" />
+    <!-- <input type="button" value="Pause" id="cd_pause" onclick="$.APP.pauseTimer()" /> -->
+    <input type="button" value="Stop"  id="cd_stop" onclick="$.APP.stopTimer()" />
+    <input type="button" value="Reset" id="cd_reset" onclick="$.APP.resetTimer()" />
+    <br/>
+    <br/>
+    <input type="text" value="15" id="cd_seconds" />
+    secs
+    <br/>
+    <br/>
+    <span id="cd_status">Idle</span>
+</div>
