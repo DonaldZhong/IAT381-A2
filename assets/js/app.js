@@ -6,7 +6,7 @@ var clockApp = angular.module('clockApp', ['ngRoute']);
 
             // route for the home page
             .when('/', {
-                templateUrl : 'main.html',
+                templateUrl : 'views/main.html',
                 controller  : 'mainController'
             })
             // route for the alarm page
