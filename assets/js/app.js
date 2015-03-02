@@ -42,19 +42,17 @@ clockApp.directive("swipeable", function($route, $location) {
     hammer.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
 
     hammer.on("swipeleft swiperight", function(e) {
-      // if event type is swiperight set the direction to 1, otherwise 0
+      // if event type is swipeleft set the direction to 1, otherwise 0
       var direction = e.type === "swipeleft" ? 1 : 0;
       
       if (direction) {
-        scope.$apply(function() {
-          $location.path(getNextRoute());
-        });
+        $location.path(getNextRoute());
         
       } else {
-        scope.$apply(function() {
-          $location.path(getPrevRoute());
-        });
+        $location.path(getPrevRoute());
       }
+      
+      scope.$apply();
     });
     
     function getNextRoute() {
