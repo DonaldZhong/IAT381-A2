@@ -81,7 +81,7 @@ var last = Date.now(), count = 0;
 setInterval(process, 1000/FPS);
 
 function process() {
-  var dispType = ['時計', '顔文字'];
+  var dispType = ['clock', 'text'];
   ctx.clearRect(0, 0, _width, _height);
   var time = timeDraw();
   if (prev_time !== time){
@@ -91,12 +91,11 @@ function process() {
   if(updateState){
      
   if (nowDisp === CLOCK_VIEW) {
-    // 時計
       var textSize = 60;
       var text = time;
       textWidth = textSize*4.5;
       textHeight = textSize;
-      setX = _width/2 - textSize*2.25;
+      setX = _width/2 - textSize*2.1;
       setY = _height/2 - textSize/2;
 
       ctx.font = textSize+"px sans-serif";
@@ -104,8 +103,7 @@ function process() {
       ctx.fillStyle = '#fff';
       ctx.fillText(text, setX, setY);
     } else if(nowDisp === TEXT_VIEW) {
-    // テキスト
-      
+
       textSize = 40;
       var a = Math.floor(30*Math.random());
       var score=["(^^)","∑(*ﾟｪﾟ*)","( ﾟ∀ﾟ)・;'.、","∑(ﾟ◇ﾟﾉ)ﾉ","(*ﾟДﾟ)","(*´∀｀*)","(｀ω´)","(｀・ω・´)","(*ﾉｪﾟ)b","(σﾟ∀ﾟ)σ","(ｏ'∀'人)",
@@ -125,7 +123,7 @@ function process() {
       ctx.fillText(text, setX, setY);
   }
   updateState = false;
-  // パーティクルを配置する座標を取得する
+  
     textData = ctx.getImageData(setX, setY, textWidth, textHeight).data;
   }
   var m, _i = 0;
@@ -135,16 +133,16 @@ function process() {
       if(textData[idx] > 100) {
         _i++;
         m = particles[_i];
-        // 現在の位置から目標までの値
+
         var X = x + setX - m.px;
         var Y = y + setY - m.py;
         var T = Math.sqrt(X*X + Y*Y);
-        // 現在の位置から目標までの角度
+    
         var A = Math.atan2(Y, X);
         var C = Math.cos(A);
         var S = Math.sin(A);
 
-        // 移動幅
+    
         m.x = m.px + C*T*0.15;
         m.y = m.py + S*T*0.15;
         setPixel(m.x+Math.random()*3-1.5, m.y+Math.random()*3-1.5);
@@ -157,34 +155,34 @@ function process() {
       }
     }
   }
-  // 余ったパーティクルをぐるぐるする
+
   for(var i = _i+1, L = particles.length;i < L;i++) {
     m = particles[i];
     m.ran += 0.0007;
 
     if(m.timeFlg) {
-      // 現在の位置から目標までの値
+   
       X = (_width/2 + Math.cos(m.ran*180/Math.PI) * m.range) - m.px;
       Y = (_height/2 + Math.sin(m.ran*180/Math.PI) * m.range) - m.py;
 
       T = Math.sqrt(X*X + Y*Y);
-      // 現在の位置から目標までの角度
+  
       A = Math.atan2(Y, X);
       C = Math.cos(A);
       S = Math.sin(A);
 
-      // 移動幅
+   
       m.x = m.px + C*T*0.15;
       m.y = m.py + S*T*0.15;
       if(m.x < 1 && m.y < 1) m.timeFlg = false;
 
     } else {
-      // 次の配置位置
+   
       m.x = _width /2 + Math.cos(m.ran*180/Math.PI) * m.range;
       m.y = _height/2 + Math.sin(m.ran*180/Math.PI) * m.range;
     }
 
-    // パーティクルを配置
+
     drawDotLine(m.x, m.y, m.px, m.py);
   //setPixel(m.x, m.y);
 
@@ -203,7 +201,7 @@ function process() {
   }
 }
 
-// パーティクルの初期化
+
 function particle() {
   var ran = Math.random()*360*180/Math.PI;
   var range = _width/2.2 - Math.random()*16;
@@ -216,7 +214,7 @@ function particle() {
   this.ran = ran;
 }
 
-// 現在の時間を取得
+
 function timeDraw() {
   var date = new Date();
   var H = (date.getHours() > 9)? date.getHours() : '0'+date.getHours();
@@ -227,7 +225,7 @@ function timeDraw() {
   return timeTxt;
 }
 
-// マウスクリックイベント
+
 function mouseClick() {
   if (nowDisp === CLOCK_VIEW){
     nowDisp = TEXT_VIEW;
@@ -238,7 +236,7 @@ function mouseClick() {
   return false;
 }
 
-// ドットで線を描く
+
 function drawDotLine(x, y, px, py) {
   var _x = (x > px ? 1 : -1) * (x - px);
   var _y = (y > py ? 1 : -1) * (y - py);
@@ -263,3 +261,4 @@ function drawDotLine(x, y, px, py) {
     }
   }
 }
+
