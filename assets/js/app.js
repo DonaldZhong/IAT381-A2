@@ -46,13 +46,15 @@ clockApp.directive("swipeable", function($route, $location) {
       var direction = e.type === "swipeleft" ? 1 : 0;
       
       if (direction) {
-        $location.path(getNextRoute());
+        scope.$apply(function() {
+          $location.path(getNextRoute());
+        });
         
       } else {
-        $location.path(getPrevRoute());
+        scope.$apply(function() {
+          $location.path(getPrevRoute());
+        });
       }
-      
-      scope.$apply();
     });
     
     function getNextRoute() {

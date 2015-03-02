@@ -15,12 +15,11 @@
 <![endif]-->
 </head>
 <body>
-<div ng-view swipeable></div>
 <div class="container">
 	<div class="tabs-x tabs-left tab-bordered" role="tablist">
 		<div class="nav nav-tabs"> 
 				<div>
-					<a href="#" ><img src="assets/img/clock.png" class="img-responsive" alt="Main"></a>
+					<a href="#/" ><img src="assets/img/clock.png" class="img-responsive" alt="Main"></a>
 				</div>    
 				<div>
 					<a href="#/alarm" ><img src="assets/img/alarm.png" class="img-responsive" alt="Alarm"></a>
@@ -37,14 +36,14 @@
 
  <canvas id="canvas"></canvas>
 
-
+<div ng-view swipeable></div>
 
 
 
 
 <!-- JavaScript Includes -->
 <script src="bower_components/jquery/jquery.min.js"></script>
-<script src="assets/js/hammer.min.js"></script>
+<script src="assets/js/hammer.js"></script>
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src="bower_components/bootstrap/docs/assets/js/bootstrap.min.js"></script>
