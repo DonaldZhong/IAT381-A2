@@ -1,7 +1,7 @@
-/*div[ng-view] {
+div[ng-view] {
   height: 100%;
   width: 100%;
-}*/
+}
 
 .view-animate.ng-enter, .view-animate.ng-leave {
   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s;
@@ -38,11 +38,17 @@ html, body{
   margin:0px;
   padding:0px;
   background: #000;
+  height: 100%;
+  width: 100%;
 }
 canvas{
   background: #000;
 	margin: 50px auto;
 	display: block;
+	position: absolute;
+	left: 50%;
+	margin-left: -200px;
+/*	pointer-events:none;*/
 }
 #info{
   position:absolute;

@@ -44,7 +44,9 @@ clockApp.directive("swipeable", function($route, $location) {
     hammer.on("swipeleft swiperight", function(e) {
       // if event type is swipeleft set the direction to 1, otherwise 0
       var direction = e.type === "swipeleft" ? 1 : 0;
-      
+      console.log(e.type);
+      console.log($route.current.$$route.originalPath);
+
       if (direction) {
          scope.$apply(function() {
         $location.path(getNextRoute());
