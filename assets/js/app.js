@@ -1,4 +1,4 @@
-var clockApp = angular.module('clockApp', ['ngRoute']);
+var clockApp = angular.module('clockApp', ['ngAnimate','ngRoute']);
 
     // configure routes
     clockApp.config(function($routeProvider) {
@@ -39,20 +39,23 @@ clockApp.directive("swipeable", function($route, $location) {
     });
 
     var hammer = new Hammer(element[0]);
-    hammer.get('swipe').set({ direction: Hammer.DIRECTION_HORIZONTAL });
+    hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
 
     hammer.on("swipeleft swiperight", function(e) {
       // if event type is swipeleft set the direction to 1, otherwise 0
       var direction = e.type === "swipeleft" ? 1 : 0;
       
       if (direction) {
+         scope.$apply(function() {
         $location.path(getNextRoute());
-        
+         });
+
       } else {
+        scope.$apply(function() {
         $location.path(getPrevRoute());
+        });
       }
       
-      scope.$apply();
     });
     
     function getNextRoute() {
