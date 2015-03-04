@@ -8,6 +8,8 @@
 
 <!-- The main CSS file -->
 <link href="assets/css/style.css" rel="stylesheet">
+<link href="assets/css/pure-min.css" rel="stylesheet">
+
 
 
 <!--[if lt IE 9]>
@@ -15,28 +17,27 @@
 <![endif]-->
 </head>
 <body>
-<div class="container">
+<div ng-view swipeable class="view-animate"> </div>
+
+<div id="footer">
 	<div class="tabs-x tabs-left tab-bordered" role="tablist">
 		<div class="nav nav-tabs"> 
-				<div>
-					<a href="#/" ><img src="assets/img/clock.png" class="img-responsive" alt="Main"></a>
+				<div class="links">
+					<a href="#/"><img src="assets/img/clock.png" class="img-responsive" alt="Main"></a>
 				</div>    
-				<div>
+				<div class="links">
 					<a href="#/alarm" ><img src="assets/img/alarm.png" class="img-responsive" alt="Alarm"></a>
-				</div>    
-				<div>
+				</div >    
+				<div class="links">
 					<a href="#/stopWatch" ><img src="assets/img/stopWatch.png" class="img-responsive" alt="stopWatch"></a>
 				</div>
-				<div>
+				<div class="links">
 					<a href="#/timer"><img src="assets/img/timer.png" class="img-responsive" alt="Timer"></a>
 				</div>
 		</div> 
 	</div>
 </div>
-<canvas id="canvas"></canvas>
- 
 
-<div ng-view swipeable class="view-animate"></div>
 
 
 
@@ -48,8 +49,6 @@
 <script src="assets/js/angular-animate.min.js"></script>
 <script src="assets/js/hammer.js"></script>
 <script src="bower_components/bootstrap/docs/assets/js/bootstrap.min.js"></script>
-<script src="assets/js/script.js"></script>
-<script src="assets/js/timer.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/controllers/main.js"></script>
 <script src="assets/js/controllers/alarm.js"></script>

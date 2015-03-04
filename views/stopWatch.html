@@ -1,16 +1,12 @@
-<div>
-    <h1>Stopwatch</h1>
-    <span id="sw_h">00</span>:
-    <span id="sw_m">00</span>:
-    <span id="sw_s">00</span>:
-    <span id="sw_ms">00</span>
-    <br/>
-    <br/>
-    <input type="button" value="Start" id="sw_start" onclick="$.APP.startTimer('sw')" />
-<!--     <input type="button" value="Pause" id="sw_pause" onclick="$.APP.pauseTimer()" /> -->
-    <input type="button" value="Stop"  id="sw_stop" onclick="$.APP.stopTimer()" />
-    <input type="button" value="Reset" id="sw_reset" onclick="$.APP.resetTimer()" />
-    <br/>
-    <br/>
-    <span id="sw_status">Idle</span>
-</div>
+<p>Click anywhere on circle to start the stopwatch. Click again to pause. Press the button below to restart the stopwatch</p>
+<br>
+<div id="time">0</div>
+<canvas id="stopwatch" width = 200 height = 200></canvas>
+<br>
+<div id="resetButton">
+ <br>
+ <input type="image" src="assets/img/resetButton.png" name="image" id="resetbutton" width="70" height="30" class="button-error pure-button"></br>
+ </div>
+
+
+<script src="assets/js/controllers/stopWatch.js"></script>

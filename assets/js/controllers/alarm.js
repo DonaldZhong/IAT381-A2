@@ -2,6 +2,14 @@
         $scope.message = 'Look! I am an alarm page.';
     });
 
+function isSet() {
+    document.getElementById("status").innerHTML = "The alarm has been set!";
+}
+
+function isNotSet() {
+    document.getElementById("status").innerHTML = "Alarm has been reset";
+}
+
 var jsalarm={
 	padfield:function(f){
 		return (f<10)? "0"+f : f
@@ -24,7 +32,7 @@ var jsalarm={
 		this.submitref=document.getElementById("submitbutton")
 		this.submitref.onclick=function(){
 			jsalarm.setalarm()
-			this.value="Alarm Set"
+			isSet();
 			this.disabled=true
 			return false
 		}
@@ -35,6 +43,7 @@ var jsalarm={
 		jsalarm.hourselect.disabled=false
 		jsalarm.minuteselect.disabled=false
 		jsalarm.secondselect.disabled=false
+		isNotSet();
 		return false
 		}
 		var selections=document.getElementsByTagName("select")

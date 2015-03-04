@@ -2,22 +2,24 @@
 <div id="jsalarmclock">
 	<div>
 		<div class="leftcolumn">Current Time:</div> 
-			<span id="jsalarm_ct">
+			<span id="jsalarm_ct" class="nice">
 			</span>
 		</div>
 	<div>
 		<div class="leftcolumn">Set Alarm:</div> 
-			<span><select></select> Hour</span> 
+			<span class="pure-menu-list"><select></select> Hour</span> 
 			<span><select></select> Minutes</span> 
 			<span><select></select> Seconds</span>
 		</div>
 	<div>
 		<div class="leftcolumn">Set Alarm Action:</div> 
 	</div>
-			<input type="submit" value="Set Alarm!" id="submitbutton" /> 
-			<input type="reset" value="reset" id="resetbutton" />
 
+			<input type="submit" value="Set Alarm!" id="submitbutton" class="button-success pure-button" onclick="isSet()"/> 
+			<input type="reset" value="reset" id="resetbutton" class="button-warning pure-button"onclick="isNotSet()"/>
+<div id="status"></div>	
 	</div>
+	
 </form>
 <audio id="audiotag1" src="assets/audio/ticktac.mp3" preload="auto"></audio>
 <script>jsalarm.init()</script>
